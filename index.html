@@ -104,9 +104,10 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all var(--reset-duration, 1s) cubic-bezier(0.4, 0, 0.6, 1);
             position: relative;
             cursor: pointer;
+            transform: scale(1);
         }
         
         .breathing-circle::before {
@@ -135,20 +136,24 @@
             transform: scale(1.4);
             background: radial-gradient(circle, rgba(173,216,230,0.4) 0%, rgba(135,206,235,0.2) 100%);
             box-shadow: 0 0 60px rgba(135,206,235,0.4), 0 0 120px rgba(135,206,235,0.2);
+            transition: all var(--inhale-duration, 3s) cubic-bezier(0.4, 0, 0.6, 1);
         }
         
         .breathing-circle.inhale::after {
             opacity: 1;
+            transition: opacity var(--inhale-duration, 3s) ease;
         }
         
         .breathing-circle.exhale {
             transform: scale(0.7);
             background: radial-gradient(circle, rgba(255,182,193,0.4) 0%, rgba(255,160,122,0.2) 100%);
             box-shadow: 0 0 60px rgba(255,160,122,0.4), 0 0 120px rgba(255,160,122,0.2);
+            transition: all var(--exhale-duration, 5s) cubic-bezier(0.4, 0, 0.6, 1);
         }
         
         .breathing-circle.exhale::after {
             opacity: 1;
+            transition: opacity var(--exhale-duration, 5s) ease;
         }
         
         @keyframes pulse {
@@ -615,7 +620,16 @@
             isInhaling = true;
             currentTimer = inhaleTime;
             document.getElementById('status').textContent = `深深吸气...`;
-            document.getElementById('breathingCircle').className = 'breathing-circle inhale';
+            
+            // 设置动画时长和开始吸气动画
+            const circle = document.getElementById('breathingCircle');
+            circle.style.setProperty('--inhale-duration', `${inhaleTime}s`);
+            
+            // 先重置到中性状态，然后开始吸气
+            circle.className = 'breathing-circle';
+            setTimeout(() => {
+                circle.className = 'breathing-circle inhale';
+            }, 50);
             
             playInhaleSound();
             
@@ -625,7 +639,7 @@
                 if (currentTimer <= 0) {
                     clearInterval(timerInterval);
                     if (isRunning) {
-                        breathingTimeout = setTimeout(startExhale, 100);
+                        breathingTimeout = setTimeout(startExhale, 300);
                     }
                 }
             }, 1000);
@@ -635,7 +649,13 @@
             isInhaling = false;
             currentTimer = exhaleTime;
             document.getElementById('status').textContent = `缓缓呼气...`;
-            document.getElementById('breathingCircle').className = 'breathing-circle exhale';
+            
+            // 设置动画时长和开始呼气动画
+            const circle = document.getElementById('breathingCircle');
+            circle.style.setProperty('--exhale-duration', `${exhaleTime}s`);
+            
+            // 从当前状态开始呼气
+            circle.className = 'breathing-circle exhale';
             
             playExhaleSound();
             
@@ -652,7 +672,7 @@
                     }, 500);
                     
                     if (isRunning) {
-                        breathingTimeout = setTimeout(startInhale, 500);
+                        breathingTimeout = setTimeout(startInhale, 800);
                     }
                 }
             }, 1000);
@@ -687,7 +707,12 @@
             clearTimeout(breathingTimeout);
             
             document.getElementById('status').textContent = '点击圆圈开始练习';
-            document.getElementById('breathingCircle').className = 'breathing-circle';
+            
+            // 平滑过渡回原始状态
+            const circle = document.getElementById('breathingCircle');
+            circle.style.setProperty('--reset-duration', '1s');
+            circle.className = 'breathing-circle';
+            
             document.getElementById('timer').textContent = '0';
             document.getElementById('btnText').textContent = '开始练习';
             
