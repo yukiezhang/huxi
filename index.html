@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>呼吸练习器</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: white;
+        }
+        
+        .container {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+        
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .breathing-circle {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0.1) 100%);
+            margin: 30px auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: transform 0.3s ease;
+            box-shadow: 0 0 50px rgba(255,255,255,0.2);
+        }
+        
+        .breathing-circle.inhale {
+            transform: scale(1.3);
+            background: radial-gradient(circle, rgba(173,216,230,0.6) 0%, rgba(135,206,235,0.3) 100%);
+            box-shadow: 0 0 80px rgba(135,206,235,0.5);
+        }
+        
+        .breathing-circle.exhale {
+            transform: scale(0.8);
+            background: radial-gradient(circle, rgba(255,182,193,0.6) 0%, rgba(255,160,122,0.3) 100%);
+            box-shadow: 0 0 80px rgba(255,160,122,0.5);
+        }
+        
+        .status {
+            font-size: 2em;
+            font-weight: bold;
+            margin: 20px 0;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .timer {
+            font-size: 3em;
+            font-weight: bold;
+            margin: 20px 0;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+        
+        .controls {
+            margin-top: 30px;
+        }
+        
+        button {
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            border: none;
+            color: white;
+            padding: 15px 30px;
+            font-size: 1.2em;
+            border-radius: 50px;
+            cursor: pointer;
+            margin: 0 10px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        .cycle-counter {
+            font-size: 1.2em;
+            margin-top: 20px;
+            opacity: 0.8;
+        }
+        
+        .instructions {
+            margin-top: 30px;
+            font-size: 1.1em;
+            line-height: 1.6;
+            opacity: 0.9;
+        }
+        
+        .settings {
+            margin: 20px 0;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .settings h3 {
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+        
+        .setting-group {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-bottom: 10px;
+        }
+        
+        .setting-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .setting-item label {
+            font-size: 1.1em;
+            min-width: 60px;
+        }
+        
+        .setting-item input {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 8px;
+            color: white;
+            padding: 8px 12px;
+            font-size: 1.1em;
+            text-align: center;
+            width: 70px;
+        }
+        
+        .setting-item input:focus {
+            outline: none;
+            border-color: rgba(255, 255, 255, 0.6);
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+        }
+        
+        .preset-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 15px;
+        }
+        
+        .preset-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 8px 15px;
+            font-size: 0.9em;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .preset-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+        
+        .volume-control {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .volume-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+        
+        .volume-slider {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 150px;
+            height: 6px;
+            border-radius: 3px;
+            background: rgba(255, 255, 255, 0.2);
+            outline: none;
+            transition: all 0.3s ease;
+        }
+        
+        .volume-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .volume-slider::-webkit-slider-thumb:hover {
+            transform: scale(1.1);
+            box-shadow: 0 3px 8px rgba(0,0,0,0.4);
+        }
+        
+        .volume-slider::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+        }
+        
+        .volume-value {
+            font-weight: bold;
+            min-width: 35px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🫁 呼吸练习器</h1>
+        
+        <div class="breathing-circle" id="breathingCircle">
+            <div style="font-size: 1.5em;">💨</div>
+        </div>
+        
+        <div class="status" id="status">点击开始按钮开始练习</div>
+        <div class="timer" id="timer">0</div>
+        
+        <div class="settings">
+            <h3>⚙️ 自定义设置</h3>
+            <div class="setting-group">
+                <div class="setting-item">
+                    <label>吸气:</label>
+                    <input type="number" id="inhaleTime" value="5" min="1" max="30">
+                    <span>秒</span>
+                </div>
+                <div class="setting-item">
+                    <label>呼气:</label>
+                    <input type="number" id="exhaleTime" value="10" min="1" max="60">
+                    <span>秒</span>
+                </div>
+            </div>
+            <div class="preset-buttons">
+                <button class="preset-btn" onclick="setPreset(4, 4)">4-4 平衡呼吸</button>
+                <button class="preset-btn" onclick="setPreset(4, 6)">4-6 放松呼吸</button>
+                <button class="preset-btn" onclick="setPreset(5, 10)">5-10 深度放松</button>
+                <button class="preset-btn" onclick="setPreset(7, 11)">7-11 抗焦虑</button>
+            </div>
+            
+            <div class="volume-control">
+                <div class="volume-item">
+                    <span>🔊</span>
+                    <input type="range" class="volume-slider" id="volumeSlider" min="0" max="100" value="75">
+                    <span class="volume-value" id="volumeValue">75%</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="controls">
+            <button id="startBtn" onclick="startBreathing()">开始练习</button>
+            <button id="stopBtn" onclick="stopBreathing()">停止练习</button>
+        </div>
+        
+        <div class="cycle-counter">
+            完成循环: <span id="cycleCount">0</span>
+        </div>
+        
+        <div class="instructions">
+            <p>🌸 跟随圆圈的变化和音效提示进行呼吸</p>
+            <p>可以自定义吸气和呼气的时间，或选择预设模式</p>
+        </div>
+    </div>
+
+    <script>
+        let isRunning = false;
+        let currentTimer = 0;
+        let timerInterval;
+        let breathingTimeout;
+        let cycleCount = 0;
+        let isInhaling = true;
+        let inhaleTime = 5;
+        let exhaleTime = 10;
+        let volumeLevel = 0.75; // 默认音量75%
+        
+        // 创建音效上下文
+        let audioContext;
+        
+        function initAudio() {
+            if (!audioContext) {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            }
+        }
+        
+        // 更新音量设置
+        function updateVolume() {
+            const slider = document.getElementById('volumeSlider');
+            const valueDisplay = document.getElementById('volumeValue');
+            volumeLevel = slider.value / 100;
+            valueDisplay.textContent = slider.value + '%';
+        }
+        
+        // 更新呼吸时间设置
+        function updateSettings() {
+            inhaleTime = parseInt(document.getElementById('inhaleTime').value) || 5;
+            exhaleTime = parseInt(document.getElementById('exhaleTime').value) || 10;
+            
+            // 限制范围
+            inhaleTime = Math.max(1, Math.min(30, inhaleTime));
+            exhaleTime = Math.max(1, Math.min(60, exhaleTime));
+            
+            document.getElementById('inhaleTime').value = inhaleTime;
+            document.getElementById('exhaleTime').value = exhaleTime;
+        }
+        
+        // 设置预设值
+        function setPreset(inhale, exhale) {
+            document.getElementById('inhaleTime').value = inhale;
+            document.getElementById('exhaleTime').value = exhale;
+            updateSettings();
+        }
+        
+        // 监听输入变化
+        document.getElementById('inhaleTime').addEventListener('input', updateSettings);
+        document.getElementById('exhaleTime').addEventListener('input', updateSettings);
+        document.getElementById('volumeSlider').addEventListener('input', updateVolume);
+        
+        // 生成吸气音效 - 低频到高频的渐变音
+        function playInhaleSound() {
+            initAudio();
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            // 频率从200Hz渐变到400Hz
+            oscillator.frequency.setValueAtTime(200, audioContext.currentTime);
+            oscillator.frequency.linearRampToValueAtTime(400, audioContext.currentTime + 0.8);
+            
+            // 音量渐变 - 根据滑块设置调整
+            const maxVolume = volumeLevel * 0.4; // 最大音量基础值
+            gainNode.gain.setValueAtTime(0, audioContext.currentTime);
+            gainNode.gain.linearRampToValueAtTime(maxVolume, audioContext.currentTime + 0.1);
+            gainNode.gain.linearRampToValueAtTime(0, audioContext.currentTime + 0.8);
+            
+            oscillator.type = 'sine';
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + 0.8);
+        }
+        
+        // 生成呼气音效 - 高频到低频的渐变音
+        function playExhaleSound() {
+            initAudio();
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            // 频率从400Hz渐变到150Hz
+            oscillator.frequency.setValueAtTime(400, audioContext.currentTime);
+            oscillator.frequency.linearRampToValueAtTime(150, audioContext.currentTime + 1.2);
+            
+            // 音量渐变 - 根据滑块设置调整
+            const maxVolume = volumeLevel * 0.35; // 最大音量基础值
+            gainNode.gain.setValueAtTime(0, audioContext.currentTime);
+            gainNode.gain.linearRampToValueAtTime(maxVolume, audioContext.currentTime + 0.1);
+            gainNode.gain.linearRampToValueAtTime(0, audioContext.currentTime + 1.2);
+            
+            oscillator.type = 'sine';
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + 1.2);
+        }
+        
+        function updateDisplay() {
+            document.getElementById('timer').textContent = currentTimer;
+            document.getElementById('cycleCount').textContent = cycleCount;
+        }
+        
+        function startInhale() {
+            updateSettings(); // 获取最新设置
+            isInhaling = true;
+            currentTimer = inhaleTime;
+            document.getElementById('status').textContent = `🌊 深深吸气... (${inhaleTime}秒)`;
+            document.getElementById('breathingCircle').className = 'breathing-circle inhale';
+            
+            // 播放吸气音效
+            playInhaleSound();
+            
+            timerInterval = setInterval(() => {
+                currentTimer--;
+                updateDisplay();
+                if (currentTimer <= 0) {
+                    clearInterval(timerInterval);
+                    if (isRunning) {
+                        breathingTimeout = setTimeout(startExhale, 100);
+                    }
+                }
+            }, 1000);
+        }
+        
+        function startExhale() {
+            isInhaling = false;
+            currentTimer = exhaleTime;
+            document.getElementById('status').textContent = `🍃 缓缓呼气... (${exhaleTime}秒)`;
+            document.getElementById('breathingCircle').className = 'breathing-circle exhale';
+            
+            // 播放呼气音效
+            playExhaleSound();
+            
+            timerInterval = setInterval(() => {
+                currentTimer--;
+                updateDisplay();
+                if (currentTimer <= 0) {
+                    clearInterval(timerInterval);
+                    cycleCount++;
+                    updateDisplay();
+                    if (isRunning) {
+                        breathingTimeout = setTimeout(startInhale, 500);
+                    }
+                }
+            }, 1000);
+        }
+        
+        function startBreathing() {
+            if (isRunning) return;
+            
+            updateSettings(); // 确保使用最新设置
+            isRunning = true;
+            cycleCount = 0;
+            document.getElementById('startBtn').style.opacity = '0.5';
+            document.getElementById('stopBtn').style.opacity = '1';
+            
+            // 禁用设置输入框
+            document.getElementById('inhaleTime').disabled = true;
+            document.getElementById('exhaleTime').disabled = true;
+            document.getElementById('volumeSlider').disabled = true;
+            
+            startInhale();
+        }
+        
+        function stopBreathing() {
+            isRunning = false;
+            clearInterval(timerInterval);
+            clearTimeout(breathingTimeout);
+            
+            document.getElementById('status').textContent = '练习已停止 - 点击开始继续';
+            document.getElementById('breathingCircle').className = 'breathing-circle';
+            document.getElementById('timer').textContent = '0';
+            
+            document.getElementById('startBtn').style.opacity = '1';
+            document.getElementById('stopBtn').style.opacity = '0.5';
+            
+            // 重新启用设置输入框
+            document.getElementById('inhaleTime').disabled = false;
+            document.getElementById('exhaleTime').disabled = false;
+            document.getElementById('volumeSlider').disabled = false;
+        }
+        
+        // 初始化按钮状态
+        document.getElementById('stopBtn').style.opacity = '0.5';
+        
+        // 初始化设置
+        updateSettings();
+        updateVolume();
+        
+        // 点击圆圈也可以开始/停止
+        document.getElementById('breathingCircle').addEventListener('click', function() {
+            if (isRunning) {
+                stopBreathing();
+            } else {
+                startBreathing();
+            }
+        });
+    </script>
+</body>
+</html>
