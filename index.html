@@ -12,123 +12,197 @@
         }
         
         body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            font-family: 'Arial', sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
             color: white;
+            transition: background 0.8s ease;
+            padding: 20px 0;
+        }
+        
+        /* 主题配色 */
+        .theme-ocean {
+            background: linear-gradient(135deg, #0f4c75 0%, #3282b8 50%, #bbe1fa 100%);
+        }
+        
+        .theme-forest {
+            background: linear-gradient(135deg, #2d5016 0%, #68b738 50%, #a8e6cf 100%);
+        }
+        
+        .theme-sunset {
+            background: linear-gradient(135deg, #ff6b35 0%, #f7931e 50%, #ffd23f 100%);
+        }
+        
+        .theme-lavender {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
         }
         
         .container {
             text-align: center;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border-radius: 30px;
             padding: 40px;
-            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
-            border: 1px solid rgba(255, 255, 255, 0.18);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            max-width: 500px;
+            width: 90vw;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
         }
         
         h1 {
-            font-size: 2.5em;
-            margin-bottom: 30px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            font-size: 2em;
+            font-weight: 300;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.2);
         }
         
-        .breathing-circle {
-            width: 200px;
-            height: 200px;
+        .theme-toggle {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .theme-btn {
+            width: 30px;
+            height: 30px;
             border-radius: 50%;
-            background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0.1) 100%);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .theme-btn:hover {
+            transform: scale(1.1);
+            border-color: rgba(255, 255, 255, 0.8);
+        }
+        
+        .theme-btn.active {
+            border-color: rgba(255, 255, 255, 1);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+        }
+        
+        .theme-ocean-btn { background: linear-gradient(135deg, #0f4c75, #bbe1fa); }
+        .theme-forest-btn { background: linear-gradient(135deg, #2d5016, #a8e6cf); }
+        .theme-sunset-btn { background: linear-gradient(135deg, #ff6b35, #ffd23f); }
+        .theme-lavender-btn { background: linear-gradient(135deg, #667eea, #f093fb); }
+        
+        .breathing-circle {
+            width: 220px;
+            height: 220px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0.05) 100%);
             margin: 30px auto;
             display: flex;
             justify-content: center;
             align-items: center;
-            transition: transform 0.3s ease;
-            box-shadow: 0 0 50px rgba(255,255,255,0.2);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            cursor: pointer;
+        }
+        
+        .breathing-circle::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: inherit;
+            opacity: 0.6;
+            animation: pulse 3s infinite ease-in-out;
+        }
+        
+        .breathing-circle::after {
+            content: '';
+            position: absolute;
+            width: 120%;
+            height: 120%;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.5s ease;
         }
         
         .breathing-circle.inhale {
-            transform: scale(1.3);
-            background: radial-gradient(circle, rgba(173,216,230,0.6) 0%, rgba(135,206,235,0.3) 100%);
-            box-shadow: 0 0 80px rgba(135,206,235,0.5);
+            transform: scale(1.4);
+            background: radial-gradient(circle, rgba(173,216,230,0.4) 0%, rgba(135,206,235,0.2) 100%);
+            box-shadow: 0 0 60px rgba(135,206,235,0.4), 0 0 120px rgba(135,206,235,0.2);
+        }
+        
+        .breathing-circle.inhale::after {
+            opacity: 1;
         }
         
         .breathing-circle.exhale {
-            transform: scale(0.8);
-            background: radial-gradient(circle, rgba(255,182,193,0.6) 0%, rgba(255,160,122,0.3) 100%);
-            box-shadow: 0 0 80px rgba(255,160,122,0.5);
+            transform: scale(0.7);
+            background: radial-gradient(circle, rgba(255,182,193,0.4) 0%, rgba(255,160,122,0.2) 100%);
+            box-shadow: 0 0 60px rgba(255,160,122,0.4), 0 0 120px rgba(255,160,122,0.2);
+        }
+        
+        .breathing-circle.exhale::after {
+            opacity: 1;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.6; }
+            50% { transform: scale(1.05); opacity: 0.8; }
+        }
+        
+        .circle-content {
+            font-size: 2.5em;
+            z-index: 2;
+            position: relative;
         }
         
         .status {
-            font-size: 2em;
-            font-weight: bold;
-            margin: 20px 0;
-            min-height: 60px;
+            font-size: 1.5em;
+            font-weight: 300;
+            margin: 25px 0;
+            min-height: 45px;
             display: flex;
             align-items: center;
             justify-content: center;
-        }
-        
-        .timer {
-            font-size: 3em;
-            font-weight: bold;
-            margin: 20px 0;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
-        }
-        
-        .controls {
-            margin-top: 30px;
-        }
-        
-        button {
-            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
-            border: none;
-            color: white;
-            padding: 15px 30px;
-            font-size: 1.2em;
-            border-radius: 50px;
-            cursor: pointer;
-            margin: 0 10px;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-        }
-        
-        button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
-        }
-        
-        button:active {
-            transform: translateY(0);
-        }
-        
-        .cycle-counter {
-            font-size: 1.2em;
-            margin-top: 20px;
-            opacity: 0.8;
-        }
-        
-        .instructions {
-            margin-top: 30px;
-            font-size: 1.1em;
-            line-height: 1.6;
             opacity: 0.9;
         }
         
-        .settings {
+        .timer {
+            font-size: 3.5em;
+            font-weight: 200;
             margin: 20px 0;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 15px;
-            padding: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            text-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            letter-spacing: 2px;
+        }
+        
+        .settings {
+            margin: 25px 0;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 20px;
+            padding: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.5s ease;
+            overflow: hidden;
+        }
+        
+        .settings.collapsed {
+            max-height: 0;
+            padding: 0 25px;
+            margin: 0;
+            opacity: 0;
+            transform: translateY(-20px);
         }
         
         .settings h3 {
-            margin-bottom: 15px;
-            font-size: 1.3em;
+            margin-bottom: 20px;
+            font-size: 1.2em;
+            font-weight: 300;
         }
         
         .setting-group {
@@ -137,223 +211,218 @@
             align-items: center;
             gap: 20px;
             flex-wrap: wrap;
-            margin-bottom: 10px;
         }
         
         .setting-item {
             display: flex;
+            flex-direction: column;
             align-items: center;
-            gap: 10px;
+            gap: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 18px;
+            padding: 20px 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            min-width: 140px;
         }
         
         .setting-item label {
-            font-size: 1.1em;
-            min-width: 60px;
+            font-size: 0.9em;
+            font-weight: 300;
+            opacity: 0.8;
+            text-align: center;
         }
         
         .time-control {
             display: flex;
             align-items: center;
-            gap: 8px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 12px;
-            padding: 5px;
+            gap: 15px;
         }
         
         .time-btn {
-            background: rgba(255, 255, 255, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            color: white;
-            width: 35px;
-            height: 35px;
+            width: 44px;
+            height: 44px;
             border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            font-size: 1.4em;
+            font-weight: 300;
             cursor: pointer;
+            transition: all 0.2s ease;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.2em;
-            font-weight: bold;
-            transition: all 0.3s ease;
             user-select: none;
+            -webkit-tap-highlight-color: transparent;
+            position: relative;
         }
         
         .time-btn:hover {
-            background: rgba(255, 255, 255, 0.3);
-            transform: scale(1.1);
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.4);
+            transform: scale(1.05);
         }
         
         .time-btn:active {
             transform: scale(0.95);
-            background: rgba(255, 255, 255, 0.4);
+            background: rgba(255, 255, 255, 0.3);
         }
         
-        .setting-item input {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            border-radius: 8px;
+        /* 增加按钮的触摸区域 */
+        .time-btn::before {
+            content: '';
+            position: absolute;
+            top: -8px;
+            left: -8px;
+            right: -8px;
+            bottom: -8px;
+            border-radius: 50%;
+        }
+        
+        @media (max-width: 768px) {
+            .time-btn {
+                width: 48px;
+                height: 48px;
+                font-size: 1.5em;
+            }
+            
+            .setting-group {
+                gap: 15px;
+            }
+            
+            .setting-item {
+                min-width: 160px;
+                padding: 25px 15px;
+            }
+            
+            .time-control {
+                gap: 18px;
+            }
+        }
+        
+        .time-display {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
             color: white;
             padding: 8px 12px;
             font-size: 1.1em;
             text-align: center;
-            width: 60px;
-            font-weight: bold;
+            min-width: 50px;
+            font-weight: 500;
         }
         
-        .setting-item input:focus {
-            outline: none;
-            border-color: rgba(255, 255, 255, 0.6);
-            box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
-        }
-        
-        .preset-buttons {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            flex-wrap: wrap;
-            margin-top: 15px;
-        }
-        
-        .preset-btn {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.3);
+        .main-button {
+            background: linear-gradient(45deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.1));
+            border: 2px solid rgba(255, 255, 255, 0.3);
             color: white;
-            padding: 8px 15px;
-            font-size: 0.9em;
-            border-radius: 20px;
+            padding: 18px 40px;
+            font-size: 1.3em;
+            border-radius: 50px;
             cursor: pointer;
-            transition: all 0.3s ease;
+            margin: 30px 10px 20px;
+            transition: all 0.4s ease;
+            backdrop-filter: blur(10px);
+            font-weight: 300;
+            letter-spacing: 1px;
+            position: relative;
+            overflow: hidden;
         }
         
-        .preset-btn:hover {
+        .main-button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
             background: rgba(255, 255, 255, 0.2);
-            border-color: rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: all 0.6s ease;
         }
         
-        .volume-control {
+        .main-button:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+        
+        .main-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            border-color: rgba(255, 255, 255, 0.6);
+        }
+        
+        .main-button:active {
+            transform: translateY(-1px);
+        }
+        
+        .main-button span {
+            position: relative;
+            z-index: 2;
+        }
+        
+        .cycle-counter {
+            font-size: 1.1em;
             margin-top: 15px;
-            padding-top: 15px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            opacity: 0.7;
+            font-weight: 300;
+            transition: all 0.5s ease;
         }
         
-        .volume-item {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 15px;
-        }
-        
-        .volume-slider {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 150px;
-            height: 6px;
-            border-radius: 3px;
-            background: rgba(255, 255, 255, 0.2);
-            outline: none;
-            transition: all 0.3s ease;
-        }
-        
-        .volume-slider::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
-            cursor: pointer;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
-            transition: all 0.3s ease;
-        }
-        
-        .volume-slider::-webkit-slider-thumb:hover {
-            transform: scale(1.1);
-            box-shadow: 0 3px 8px rgba(0,0,0,0.4);
-        }
-        
-        .volume-slider::-moz-range-thumb {
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
-            cursor: pointer;
-            border: none;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
-        }
-        
-        .time-btn:disabled {
-            opacity: 0.3;
-            cursor: not-allowed;
-            transform: none !important;
-        }
-        
-        .volume-value {
-            font-weight: bold;
-            min-width: 35px;
-            text-align: center;
+        .cycle-counter.active {
+            opacity: 1;
+            transform: scale(1.05);
         }
     </style>
 </head>
-<body>
+<body class="theme-lavender">
     <div class="container">
-        <h1>🫁 呼吸练习器</h1>
-        
-        <div class="breathing-circle" id="breathingCircle">
-            <div style="font-size: 1.5em;">💨</div>
+        <div class="header">
+            <h1>呼吸练习</h1>
+            <div class="theme-toggle">
+                <div class="theme-btn theme-ocean-btn" onclick="setTheme('ocean')" title="海洋"></div>
+                <div class="theme-btn theme-forest-btn" onclick="setTheme('forest')" title="森林"></div>
+                <div class="theme-btn theme-sunset-btn" onclick="setTheme('sunset')" title="日落"></div>
+                <div class="theme-btn theme-lavender-btn active" onclick="setTheme('lavender')" title="薰衣草"></div>
+            </div>
         </div>
         
-        <div class="status" id="status">点击开始按钮开始练习</div>
+        <div class="breathing-circle" id="breathingCircle" onclick="toggleBreathing()">
+            <div class="circle-content">💨</div>
+        </div>
+        
+        <div class="status" id="status">点击圆圈开始练习</div>
         <div class="timer" id="timer">0</div>
         
-        <div class="settings">
-            <h3>⚙️ 自定义设置</h3>
+        <div class="settings" id="settings">
+            <h3>自定义设置</h3>
             <div class="setting-group">
                 <div class="setting-item">
-                    <label>吸气:</label>
+                    <label>吸气时长</label>
                     <div class="time-control">
-                        <button class="time-btn" onclick="adjustTime('inhale', -1)">−</button>
-                        <input type="number" id="inhaleTime" value="5" min="1" max="30" readonly>
-                        <button class="time-btn" onclick="adjustTime('inhale', 1)">+</button>
+                        <button class="time-btn">−</button>
+                        <div class="time-display"><span id="inhaleDisplay">5</span>秒</div>
+                        <button class="time-btn">+</button>
                     </div>
-                    <span>秒</span>
                 </div>
                 <div class="setting-item">
-                    <label>呼气:</label>
+                    <label>呼气时长</label>
                     <div class="time-control">
-                        <button class="time-btn" onclick="adjustTime('exhale', -1)">−</button>
-                        <input type="number" id="exhaleTime" value="10" min="1" max="60" readonly>
-                        <button class="time-btn" onclick="adjustTime('exhale', 1)">+</button>
+                        <button class="time-btn">−</button>
+                        <div class="time-display"><span id="exhaleDisplay">10</span>秒</div>
+                        <button class="time-btn">+</button>
                     </div>
-                    <span>秒</span>
-                </div>
-            </div>
-            <div class="preset-buttons">
-                <button class="preset-btn" onclick="setPreset(4, 4)">4-4 平衡呼吸</button>
-                <button class="preset-btn" onclick="setPreset(4, 6)">4-6 放松呼吸</button>
-                <button class="preset-btn" onclick="setPreset(5, 10)">5-10 深度放松</button>
-                <button class="preset-btn" onclick="setPreset(7, 11)">7-11 抗焦虑</button>
-            </div>
-            
-            <div class="volume-control">
-                <div class="volume-item">
-                    <span>🔊</span>
-                    <input type="range" class="volume-slider" id="volumeSlider" min="0" max="100" value="75">
-                    <span class="volume-value" id="volumeValue">75%</span>
                 </div>
             </div>
         </div>
         
-        <div class="controls">
-            <button id="startBtn" onclick="startBreathing()">开始练习</button>
-            <button id="stopBtn" onclick="stopBreathing()">停止练习</button>
-        </div>
+        <button class="main-button" id="mainBtn" onclick="toggleBreathing()">
+            <span id="btnText">开始练习</span>
+        </button>
         
-        <div class="cycle-counter">
+        <div class="cycle-counter" id="cycleCounter">
             完成循环: <span id="cycleCount">0</span>
-        </div>
-        
-        <div class="instructions">
-            <p>🌸 跟随圆圈的变化和音效提示进行呼吸</p>
-            <p>可以自定义吸气和呼气的时间，或选择预设模式</p>
         </div>
     </div>
 
@@ -366,7 +435,7 @@
         let isInhaling = true;
         let inhaleTime = 5;
         let exhaleTime = 10;
-        let volumeLevel = 0.75; // 默认音量75%
+        let currentTheme = 'lavender';
         
         // 创建音效上下文
         let audioContext;
@@ -377,62 +446,104 @@
             }
         }
         
-        // 调节时间函数
-        function adjustTime(type, change) {
-            const input = document.getElementById(type + 'Time');
-            let currentValue = parseInt(input.value);
-            let newValue = currentValue + change;
+        // 主题切换
+        function setTheme(theme) {
+            currentTheme = theme;
+            document.body.className = `theme-${theme}`;
             
-            // 设置范围限制
-            if (type === 'inhale') {
-                newValue = Math.max(1, Math.min(30, newValue));
-            } else {
-                newValue = Math.max(1, Math.min(60, newValue));
-            }
-            
-            input.value = newValue;
-            updateSettings();
-            
-            // 添加触觉反馈效果
-            const btn = event.target;
-            btn.style.transform = 'scale(0.9)';
-            setTimeout(() => {
-                btn.style.transform = 'scale(1)';
-            }, 100);
+            // 更新主题按钮状态
+            document.querySelectorAll('.theme-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelector(`.theme-${theme}-btn`).classList.add('active');
         }
         
-        // 更新音量设置
-        function updateVolume() {
-            const slider = document.getElementById('volumeSlider');
-            const valueDisplay = document.getElementById('volumeValue');
-            volumeLevel = slider.value / 100;
-            valueDisplay.textContent = slider.value + '%';
+        // 调节时间的函数
+        function adjustTime(type, delta) {
+            if (isRunning) return; // 练习中不允许调节
+            
+            if (type === 'inhale') {
+                inhaleTime = Math.max(1, Math.min(30, inhaleTime + delta));
+                document.getElementById('inhaleDisplay').textContent = inhaleTime;
+            } else {
+                exhaleTime = Math.max(1, Math.min(60, exhaleTime + delta));
+                document.getElementById('exhaleDisplay').textContent = exhaleTime;
+            }
         }
+        
+        // 长按快速调节功能
+        let holdTimer = null;
+        let holdInterval = null;
+        
+        function startHold(type, delta, button) {
+            if (isRunning) return;
+            
+            // 立即执行一次
+            adjustTime(type, delta);
+            
+            // 添加按下效果
+            button.style.transform = 'scale(0.95)';
+            button.style.background = 'rgba(255, 255, 255, 0.3)';
+            
+            // 延迟后开始连续调节
+            holdTimer = setTimeout(() => {
+                holdInterval = setInterval(() => {
+                    adjustTime(type, delta);
+                }, 100); // 每100ms调节一次
+            }, 500); // 500ms后开始连续调节
+        }
+        
+        function endHold(button) {
+            clearTimeout(holdTimer);
+            clearInterval(holdInterval);
+            
+            // 移除按下效果
+            button.style.transform = '';
+            button.style.background = '';
+        }
+        
+        // 为所有按钮添加长按功能
+        document.addEventListener('DOMContentLoaded', function() {
+            const timeButtons = document.querySelectorAll('.time-btn');
+            
+            timeButtons.forEach(button => {
+                const isInhale = button.parentElement.parentElement.querySelector('label').textContent.includes('吸气');
+                const type = isInhale ? 'inhale' : 'exhale';
+                const delta = button.textContent === '+' ? 1 : -1;
+                
+                // 鼠标事件
+                button.addEventListener('mousedown', (e) => {
+                    e.preventDefault();
+                    startHold(type, delta, button);
+                });
+                
+                button.addEventListener('mouseup', () => endHold(button));
+                button.addEventListener('mouseleave', () => endHold(button));
+                
+                // 触摸事件（移动端）
+                button.addEventListener('touchstart', (e) => {
+                    e.preventDefault();
+                    startHold(type, delta, button);
+                });
+                
+                button.addEventListener('touchend', (e) => {
+                    e.preventDefault();
+                    endHold(button);
+                });
+                
+                button.addEventListener('touchcancel', (e) => {
+                    e.preventDefault();
+                    endHold(button);
+                });
+            });
+        });
         
         // 更新呼吸时间设置
         function updateSettings() {
-            inhaleTime = parseInt(document.getElementById('inhaleTime').value) || 5;
-            exhaleTime = parseInt(document.getElementById('exhaleTime').value) || 10;
-            
-            // 限制范围
-            inhaleTime = Math.max(1, Math.min(30, inhaleTime));
-            exhaleTime = Math.max(1, Math.min(60, exhaleTime));
-            
-            document.getElementById('inhaleTime').value = inhaleTime;
-            document.getElementById('exhaleTime').value = exhaleTime;
+            // 现在时间通过按钮调节，不需要从输入框读取
+            document.getElementById('inhaleDisplay').textContent = inhaleTime;
+            document.getElementById('exhaleDisplay').textContent = exhaleTime;
         }
         
-        // 设置预设值
-        function setPreset(inhale, exhale) {
-            document.getElementById('inhaleTime').value = inhale;
-            document.getElementById('exhaleTime').value = exhale;
-            updateSettings();
-        }
-        
-        // 监听输入变化
-        document.getElementById('volumeSlider').addEventListener('input', updateVolume);
-        
-        // 生成吸气音效 - 低频到高频的渐变音
+        // 生成吸气音效
         function playInhaleSound() {
             initAudio();
             const oscillator = audioContext.createOscillator();
@@ -441,14 +552,11 @@
             oscillator.connect(gainNode);
             gainNode.connect(audioContext.destination);
             
-            // 频率从200Hz渐变到400Hz
             oscillator.frequency.setValueAtTime(200, audioContext.currentTime);
             oscillator.frequency.linearRampToValueAtTime(400, audioContext.currentTime + 0.8);
             
-            // 音量渐变 - 根据滑块设置调整
-            const maxVolume = volumeLevel * 0.4; // 最大音量基础值
             gainNode.gain.setValueAtTime(0, audioContext.currentTime);
-            gainNode.gain.linearRampToValueAtTime(maxVolume, audioContext.currentTime + 0.1);
+            gainNode.gain.linearRampToValueAtTime(0.3, audioContext.currentTime + 0.1);
             gainNode.gain.linearRampToValueAtTime(0, audioContext.currentTime + 0.8);
             
             oscillator.type = 'sine';
@@ -456,7 +564,7 @@
             oscillator.stop(audioContext.currentTime + 0.8);
         }
         
-        // 生成呼气音效 - 高频到低频的渐变音
+        // 生成呼气音效
         function playExhaleSound() {
             initAudio();
             const oscillator = audioContext.createOscillator();
@@ -465,14 +573,11 @@
             oscillator.connect(gainNode);
             gainNode.connect(audioContext.destination);
             
-            // 频率从400Hz渐变到150Hz
             oscillator.frequency.setValueAtTime(400, audioContext.currentTime);
             oscillator.frequency.linearRampToValueAtTime(150, audioContext.currentTime + 1.2);
             
-            // 音量渐变 - 根据滑块设置调整
-            const maxVolume = volumeLevel * 0.35; // 最大音量基础值
             gainNode.gain.setValueAtTime(0, audioContext.currentTime);
-            gainNode.gain.linearRampToValueAtTime(maxVolume, audioContext.currentTime + 0.1);
+            gainNode.gain.linearRampToValueAtTime(0.25, audioContext.currentTime + 0.1);
             gainNode.gain.linearRampToValueAtTime(0, audioContext.currentTime + 1.2);
             
             oscillator.type = 'sine';
@@ -486,13 +591,12 @@
         }
         
         function startInhale() {
-            updateSettings(); // 获取最新设置
+            updateSettings();
             isInhaling = true;
             currentTimer = inhaleTime;
-            document.getElementById('status').textContent = `🌊 深深吸气... (${inhaleTime}秒)`;
+            document.getElementById('status').textContent = `深深吸气...`;
             document.getElementById('breathingCircle').className = 'breathing-circle inhale';
             
-            // 播放吸气音效
             playInhaleSound();
             
             timerInterval = setInterval(() => {
@@ -510,10 +614,9 @@
         function startExhale() {
             isInhaling = false;
             currentTimer = exhaleTime;
-            document.getElementById('status').textContent = `🍃 缓缓呼气... (${exhaleTime}秒)`;
+            document.getElementById('status').textContent = `缓缓呼气...`;
             document.getElementById('breathingCircle').className = 'breathing-circle exhale';
             
-            // 播放呼气音效
             playExhaleSound();
             
             timerInterval = setInterval(() => {
@@ -523,6 +626,11 @@
                     clearInterval(timerInterval);
                     cycleCount++;
                     updateDisplay();
+                    document.getElementById('cycleCounter').classList.add('active');
+                    setTimeout(() => {
+                        document.getElementById('cycleCounter').classList.remove('active');
+                    }, 500);
+                    
                     if (isRunning) {
                         breathingTimeout = setTimeout(startInhale, 500);
                     }
@@ -530,19 +638,26 @@
             }, 1000);
         }
         
+        function toggleBreathing() {
+            if (isRunning) {
+                stopBreathing();
+            } else {
+                startBreathing();
+            }
+        }
+        
         function startBreathing() {
             if (isRunning) return;
             
-            updateSettings(); // 确保使用最新设置
+            updateSettings();
             isRunning = true;
             cycleCount = 0;
-            document.getElementById('startBtn').style.opacity = '0.5';
-            document.getElementById('stopBtn').style.opacity = '1';
             
-            // 禁用设置控件
-            document.querySelectorAll('.time-btn').forEach(btn => btn.disabled = true);
-            document.getElementById('volumeSlider').disabled = true;
+            // 折叠设置面板
+            document.getElementById('settings').classList.add('collapsed');
+            document.getElementById('btnText').textContent = '停止练习';
             
+            updateDisplay();
             startInhale();
         }
         
@@ -551,33 +666,17 @@
             clearInterval(timerInterval);
             clearTimeout(breathingTimeout);
             
-            document.getElementById('status').textContent = '练习已停止 - 点击开始继续';
+            document.getElementById('status').textContent = '点击圆圈开始练习';
             document.getElementById('breathingCircle').className = 'breathing-circle';
             document.getElementById('timer').textContent = '0';
+            document.getElementById('btnText').textContent = '开始练习';
             
-            document.getElementById('startBtn').style.opacity = '1';
-            document.getElementById('stopBtn').style.opacity = '0.5';
-            
-            // 重新启用设置控件
-            document.querySelectorAll('.time-btn').forEach(btn => btn.disabled = false);
-            document.getElementById('volumeSlider').disabled = false;
+            // 展开设置面板
+            document.getElementById('settings').classList.remove('collapsed');
         }
-        
-        // 初始化按钮状态
-        document.getElementById('stopBtn').style.opacity = '0.5';
         
         // 初始化设置
         updateSettings();
-        updateVolume();
-        
-        // 点击圆圈也可以开始/停止
-        document.getElementById('breathingCircle').addEventListener('click', function() {
-            if (isRunning) {
-                stopBreathing();
-            } else {
-                startBreathing();
-            }
-        });
     </script>
 </body>
 </html>
