@@ -151,6 +151,42 @@
             min-width: 60px;
         }
         
+        .time-control {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 5px;
+        }
+        
+        .time-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2em;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            user-select: none;
+        }
+        
+        .time-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1);
+        }
+        
+        .time-btn:active {
+            transform: scale(0.95);
+            background: rgba(255, 255, 255, 0.4);
+        }
+        
         .setting-item input {
             background: rgba(255, 255, 255, 0.1);
             border: 1px solid rgba(255, 255, 255, 0.3);
@@ -159,7 +195,8 @@
             padding: 8px 12px;
             font-size: 1.1em;
             text-align: center;
-            width: 70px;
+            width: 60px;
+            font-weight: bold;
         }
         
         .setting-item input:focus {
@@ -243,6 +280,12 @@
             box-shadow: 0 2px 6px rgba(0,0,0,0.3);
         }
         
+        .time-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+        
         .volume-value {
             font-weight: bold;
             min-width: 35px;
@@ -266,12 +309,20 @@
             <div class="setting-group">
                 <div class="setting-item">
                     <label>吸气:</label>
-                    <input type="number" id="inhaleTime" value="5" min="1" max="30">
+                    <div class="time-control">
+                        <button class="time-btn" onclick="adjustTime('inhale', -1)">−</button>
+                        <input type="number" id="inhaleTime" value="5" min="1" max="30" readonly>
+                        <button class="time-btn" onclick="adjustTime('inhale', 1)">+</button>
+                    </div>
                     <span>秒</span>
                 </div>
                 <div class="setting-item">
                     <label>呼气:</label>
-                    <input type="number" id="exhaleTime" value="10" min="1" max="60">
+                    <div class="time-control">
+                        <button class="time-btn" onclick="adjustTime('exhale', -1)">−</button>
+                        <input type="number" id="exhaleTime" value="10" min="1" max="60" readonly>
+                        <button class="time-btn" onclick="adjustTime('exhale', 1)">+</button>
+                    </div>
                     <span>秒</span>
                 </div>
             </div>
@@ -326,6 +377,30 @@
             }
         }
         
+        // 调节时间函数
+        function adjustTime(type, change) {
+            const input = document.getElementById(type + 'Time');
+            let currentValue = parseInt(input.value);
+            let newValue = currentValue + change;
+            
+            // 设置范围限制
+            if (type === 'inhale') {
+                newValue = Math.max(1, Math.min(30, newValue));
+            } else {
+                newValue = Math.max(1, Math.min(60, newValue));
+            }
+            
+            input.value = newValue;
+            updateSettings();
+            
+            // 添加触觉反馈效果
+            const btn = event.target;
+            btn.style.transform = 'scale(0.9)';
+            setTimeout(() => {
+                btn.style.transform = 'scale(1)';
+            }, 100);
+        }
+        
         // 更新音量设置
         function updateVolume() {
             const slider = document.getElementById('volumeSlider');
@@ -355,8 +430,6 @@
         }
         
         // 监听输入变化
-        document.getElementById('inhaleTime').addEventListener('input', updateSettings);
-        document.getElementById('exhaleTime').addEventListener('input', updateSettings);
         document.getElementById('volumeSlider').addEventListener('input', updateVolume);
         
         // 生成吸气音效 - 低频到高频的渐变音
@@ -466,9 +539,8 @@
             document.getElementById('startBtn').style.opacity = '0.5';
             document.getElementById('stopBtn').style.opacity = '1';
             
-            // 禁用设置输入框
-            document.getElementById('inhaleTime').disabled = true;
-            document.getElementById('exhaleTime').disabled = true;
+            // 禁用设置控件
+            document.querySelectorAll('.time-btn').forEach(btn => btn.disabled = true);
             document.getElementById('volumeSlider').disabled = true;
             
             startInhale();
@@ -486,9 +558,8 @@
             document.getElementById('startBtn').style.opacity = '1';
             document.getElementById('stopBtn').style.opacity = '0.5';
             
-            // 重新启用设置输入框
-            document.getElementById('inhaleTime').disabled = false;
-            document.getElementById('exhaleTime').disabled = false;
+            // 重新启用设置控件
+            document.querySelectorAll('.time-btn').forEach(btn => btn.disabled = false);
             document.getElementById('volumeSlider').disabled = false;
         }
         
